@@ -27,6 +27,7 @@ A todo should contain:
 ```
 git clone https://github.com/richarddewit/rare-todos.git
 cd rare-todos
+bundle install --without production
 rails s
 ```
 
