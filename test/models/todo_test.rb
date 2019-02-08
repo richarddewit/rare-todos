@@ -3,10 +3,16 @@
 require "test_helper"
 
 class TodoTest < ActiveSupport::TestCase
-  test "should have a title" do
-    todo = Todo.new title: "Todo number one"
-    assert todo.valid?
-    todo = Todo.new
-    assert_not todo.valid?
+  def setup
+    @todo = Todo.new
+  end
+
+  test "should be valid with a title" do
+    @todo.title = "Todo number one"
+    assert @todo.valid?
+  end
+
+  test "should be invalid without a title" do
+    assert_not @todo.valid?
   end
 end
