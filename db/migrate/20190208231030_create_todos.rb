@@ -4,7 +4,7 @@ class CreateTodos < ActiveRecord::Migration[5.2]
       t.string :title, null: false
       t.date :due_date
       t.text :body
-      t.date :completed_on
+      t.timestamp :completed_on
 
       t.timestamps
     end
