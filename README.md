@@ -5,7 +5,7 @@ This is an example app to showcase the following techniques:
 - [ ] Ruby (`v2.5.3`) on Rails (`v5.2.2`) as CRUD-backend
 - [ ] React with hooks (`v16.8`) as frontend
 - [ ] TypeScript
-- [ ] Bootstrap 3 (`v3.4.0`)
+- [x] Bootstrap 3 (`v3.4.0`)
 - [ ] Rails tests for CRUD API
 - [ ] Capybara tests for React
 
