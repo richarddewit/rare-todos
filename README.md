@@ -33,7 +33,8 @@ rails s
 ### Testing
 
 ```
-# TODO haha
+rails test
+xdg-open coverage/index.html
 ```
 
 ### Deploying to Heroku
