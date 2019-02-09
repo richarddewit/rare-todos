@@ -1,6 +1,10 @@
 {
   "name": "rare-todos",
   "private": true,
+  "scripts": {
+    "lint": "tslint --project .",
+    "lint-fix": "tslint --project . --fix"
+  },
   "dependencies": {
     "@rails/webpacker": "3.5",
     "@types/react": "^16.8.2",
