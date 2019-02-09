@@ -19,7 +19,7 @@ class TodosController < ApplicationController
     @todo = Todo.new(todo_params)
 
     if @todo.save
-      render :show, status: :created, location: @todo
+      head :created
     else
       render json: @todo.errors, status: :unprocessable_entity
     end
@@ -28,7 +28,7 @@ class TodosController < ApplicationController
   # PATCH/PUT /todos/1
   def update
     if @todo.update(todo_params)
-      render :show, status: :ok, location: @todo
+      render json: @todo, status: :ok
     else
       render json: @todo.errors, status: :unprocessable_entity
     end
