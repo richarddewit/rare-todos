@@ -1,5 +1,19 @@
 {
   "name": "rare-todos",
   "private": true,
-  "dependencies": {}
+  "dependencies": {
+    "@rails/webpacker": "3.5",
+    "@types/react": "^16.8.2",
+    "@types/react-dom": "^16.8.0",
+    "babel-preset-react": "^6.24.1",
+    "prop-types": "^15.6.2",
+    "react": "^16.8.1",
+    "react-dom": "^16.8.1",
+    "react_ujs": "^2.4.4",
+    "ts-loader": "3.5.0",
+    "typescript": "^3.3.3"
+  },
+  "devDependencies": {
+    "webpack-dev-server": "2.11.2"
+  }
 }
