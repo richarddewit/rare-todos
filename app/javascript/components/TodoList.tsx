@@ -1,17 +1,16 @@
 import React, { FunctionComponent } from "react";
 
-interface ITodo {
-  title: string;
-  due_date: Date;
-
-}
+import ITodo from "../interfaces/Todo";
+import TodoListItem from "./TodoListItem";
 
 const TodoList: FunctionComponent<{ todos?: ITodo[] }> = ({ todos = [] }) => {
+  const todoListItems = todos.map((todo: ITodo, index: number) => (
+    <TodoListItem key={index} todo={todo} />
+  ));
+
   return (
     <>
-    <ul>
-      {todos.map((todo: ITodo, index: number) => (<li key={index}>{todo.title}</li>))}
-    </ul>
+      <ul className="list-group">{todoListItems}</ul>
     </>
   );
 };
