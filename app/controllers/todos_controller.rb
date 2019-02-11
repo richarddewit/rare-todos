@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class TodosController < ApplicationController
-  before_action :set_todo, only: [:show, :edit, :update, :destroy]
+  before_action :set_todo, only: [:show, :update, :destroy]
 
   # GET /todos
   def index
