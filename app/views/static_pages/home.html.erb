@@ -1,3 +1,6 @@
 <h1>RaRe TODOs</h1>
 
-<%= react_component("TodoApp", { todos: @todos }, { prerender: true }) %>
+<%= react_component("TodoApp", {
+  todos: @todos,
+  csrfToken: form_authenticity_token,
+}, { prerender: true }) %>
