@@ -2,6 +2,7 @@ import React, {
     FormEvent,
     FunctionComponent,
     useMemo,
+    useRef,
     useState,
 } from "react";
 
@@ -22,6 +23,18 @@ const TodoApp: FunctionComponent<IProps> = ({ todos: initialTodos = [], csrfToke
 
     const [todos, setTodos] = useState(initialTodos);
     const [isLoading, setIsLoading] = useState(false);
+    const [editing, setEditing] = useState(null);
+    const [formErrors, setFormErrors] = useState({});
+
+    const todoTitleEl = useRef(null);
+    const todoBodyEl = useRef(null);
+    const todoDueDateEl = useRef(null);
+
+    const resetForm = () => {
+        todoTitleEl.current.value = "";
+        todoBodyEl.current.value = "";
+        todoDueDateEl.current.value = "";
+    };
 
     const fetchTodos = async () => {
         setIsLoading(true);
@@ -41,59 +54,120 @@ const TodoApp: FunctionComponent<IProps> = ({ todos: initialTodos = [], csrfToke
         fetchTodos();
     };
 
-    const createTodo = async (todo: ITodo) => {
+    const saveTodo = async (todo: ITodo) => {
         setIsLoading(true);
 
-        await axios.post(Routes.todos_path(), todo);
+        try {
+            if (editing) {
+                await axios.put(Routes.todo_path(todo), todo);
+            } else {
+                await axios.post(Routes.todos_path(), todo);
+            }
+        } catch (error) {
+            if (error.response && error.response.data) {
+                setFormErrors(error.response.data);
+            }
+        }
 
         fetchTodos();
     };
-    const onCreateTodo = async (event: FormEvent) => {
-        event.preventDefault();
-        const form = event.target as HTMLFormElement;
-        const todo: ITodo = {
-            body: form.todoBody.value,
-            completed_on: null,
-            due_date: form.todoDueDate.value,
-            id: null,
-            title: form.todoTitle.value,
-        };
-        await createTodo(todo);
-        form.reset();
+
+    const editTodo = async (todo: ITodo) => {
+        setEditing(todo);
+        todoTitleEl.current.value = todo.title;
+        todoBodyEl.current.value = todo.body;
+        todoDueDateEl.current.value = todo.due_date;
+        todoTitleEl.current.focus();
     };
+
+    const deleteTodo = async (todo: ITodo) => {
+        if (confirm(`Do you want to delete todo "${todo.title}?"`)) {
+            setIsLoading(true);
+
+            await axios.delete(Routes.todo_path(todo));
+
+            fetchTodos();
+        }
+    };
+
+    const onSaveTodo = async (event: FormEvent) => {
+        event.preventDefault();
+
+        const todo: ITodo = {
+            body: todoBodyEl.current.value,
+            completed_on: null,
+            due_date: todoDueDateEl.current.value,
+            id: editing ? editing.id : null,
+            title: todoTitleEl.current.value,
+        };
+        await saveTodo(todo);
+
+        resetForm();
+        setEditing(null);
+    };
+
+    const formErrorHelp = (key: string) => {
+        if (formErrors && (key in formErrors)) {
+            return (
+                <span className="help-block">
+                    <ul>
+                        {formErrors[key].map((error: string, index: number) => <li key={index}>{error}</li>)}
+                    </ul>
+                </span>
+            );
+        }
+    };
+
+    const formGroupClass = (key: string) => {
+        const classNames = ["form-group"];
+        if (formErrors && (key in formErrors)) {
+            classNames.push("has-error");
+        }
+        return classNames.join(" ");
+    };
+
+    const todoForm = (
+        <form onSubmit={onSaveTodo}>
+            <div className={formGroupClass("title")}>
+                <label htmlFor="todoTitle" className="control-label">Title</label>
+                <input type="text" className="form-control" id="todoTitle" name="title" ref={todoTitleEl} />
+                {formErrorHelp("title")}
+            </div>
+            <div className={formGroupClass("body")}>
+                <label htmlFor="todoBody" className="control-label">Body</label>
+                <textarea className="form-control" rows={3} id="todoBody" name="body" ref={todoBodyEl} />
+                {formErrorHelp("body")}
+            </div>
+            <div className={formGroupClass("due_date")}>
+                <label htmlFor="todoDueDate" className="control-label">Due Date</label>
+                <input type="text" className="form-control" id="todoDueDate" name="dueDate" ref={todoDueDateEl} />
+                {formErrorHelp("due_date")}
+            </div>
+            <button className="btn btn-primary" type="submit">Save</button>
+        </form>
+    );
 
     const todoListItems = todos.map((todo: ITodo, index: number) => (
         <TodoListItem
             key={index}
             todo={todo}
             toggleDone={toggleDone}
+            editTodo={editTodo}
+            deleteTodo={deleteTodo}
         />
     ));
 
+    const appState = formErrors ? "Something went wrong" : (isLoading ? "Loading..." : "&nbsp;");
     return (
         <>
             <div className="panel panel-default">
                 <div
                     className="panel-heading text-center"
-                    dangerouslySetInnerHTML={{ __html: isLoading ? "Loading..." : "&nbsp;" }}
+                    dangerouslySetInnerHTML={{ __html: appState }}
                 />
 
                 <div className="panel-body">
-                    <form onSubmit={onCreateTodo}>
-                        <div className="form-group">
-                            <label>Title</label>
-                            <input type="text" className="form-control" name="todoTitle" />
-                        </div>
-                        <div className="form-group">
-                            <label>Body</label>
-                            <textarea className="form-control" rows={3} name="todoBody" />
-                        </div>
-                        <div className="form-group">
-                            <label>Due Date</label>
-                            <input type="text" className="form-control" name="todoDueDate" />
-                        </div>
-                        <button className="btn btn-primary" type="submit">Save</button>
-                    </form>
+                    {todoForm}
                 </div>
 
                 <ul className="list-group">

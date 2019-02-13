@@ -3,12 +3,15 @@ import React, { FormEvent, FunctionComponent } from "react";
 
 import ITodo from "../interfaces/Todo";
 
+type TodoCallback = (todo: ITodo) => void;
 interface IProps {
     todo: ITodo;
-    toggleDone: (todo: ITodo) => void;
+    toggleDone: TodoCallback;
+    editTodo: TodoCallback;
+    deleteTodo: TodoCallback;
 }
 
-const TodoListItem: FunctionComponent<IProps> = ({ todo, toggleDone }) => {
+const TodoListItem: FunctionComponent<IProps> = ({ todo, toggleDone, editTodo, deleteTodo }) => {
     const isDone = todo.completed_on !== null;
     const classNames = ["list-group-item"];
     if (isDone) {
@@ -25,18 +28,13 @@ const TodoListItem: FunctionComponent<IProps> = ({ todo, toggleDone }) => {
         </span>
     ) : null;
 
-    const onToggleDone = (event: FormEvent) => {
+    const onFormSubmit = (callback: TodoCallback) => (event: FormEvent) => {
         event.preventDefault();
-        toggleDone(todo);
+        callback(todo);
     };
-    const onEditTodo = (event: FormEvent) => {
-        event.preventDefault();
-        // TODO: edit handler
-    };
-    const onDeleteTodo = (event: FormEvent) => {
-        event.preventDefault();
-        // TODO: delete handler
-    };
+    const onToggleDone = onFormSubmit(toggleDone);
+    const onEditTodo = onFormSubmit(editTodo);
+    const onDeleteTodo = onFormSubmit(deleteTodo);
 
     const toggleDoneForm = (
         <form onSubmit={onToggleDone} style={{ display: "inline-block", marginRight: ".3em" }}>
