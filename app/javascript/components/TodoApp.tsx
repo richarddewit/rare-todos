@@ -1,6 +1,8 @@
+import dayjs from "dayjs";
 import React, {
     FormEvent,
     FunctionComponent,
+    MouseEvent,
     useMemo,
     useRef,
     useState,
@@ -18,10 +20,37 @@ interface IProps {
     csrfToken: string;
 }
 
+enum Sort {
+    Ascending = "asc",
+    Descending = "desc",
+}
+
+const mapTodos = (todos: any[]): ITodo[] => {
+    return todos.map((todo) => ({
+        ...todo,
+        due_date: todo.due_date ? dayjs(new Date(todo.due_date).getTime()) : null,
+    }));
+};
+
+const sortTodos = (todos: ITodo[], direction: Sort): ITodo[] => {
+    return todos.sort((a, b) => {
+        const aDate = a.due_date || dayjs(0);
+        const bDate = b.due_date || dayjs(0);
+        if (aDate.isSame(bDate, "day")) {
+            return 0;
+        }
+        if (direction === Sort.Ascending) {
+            return aDate.isBefore(bDate, "day") ? -1 : 1;
+        }
+        return bDate.isBefore(aDate, "day") ? -1 : 1;
+    });
+};
+
 const TodoApp: FunctionComponent<IProps> = ({ todos: initialTodos = [], csrfToken }) => {
     const axios = useMemo(() => initializeAxios(csrfToken), null);
 
-    const [todos, setTodos] = useState(initialTodos);
+    const [sort, setSort] = useState(Sort.Descending);
+    const [todos, setTodos] = useState(mapTodos(initialTodos));
     const [isLoading, setIsLoading] = useState(false);
     const [editing, setEditing] = useState(null);
     const [formErrors, setFormErrors] = useState({});
@@ -40,7 +69,7 @@ const TodoApp: FunctionComponent<IProps> = ({ todos: initialTodos = [], csrfToke
         setIsLoading(true);
 
         const result = await axios(Routes.todos_path());
-        setTodos(result.data);
+        setTodos(mapTodos(result.data));
 
         setIsLoading(false);
     };
@@ -63,20 +92,23 @@ const TodoApp: FunctionComponent<IProps> = ({ todos: initialTodos = [], csrfToke
             } else {
                 await axios.post(Routes.todos_path(), todo);
             }
+
+            fetchTodos();
         } catch (error) {
+            // tslint:disable-next-line:no-console
+            console.error(error);
             if (error.response && error.response.data) {
                 setFormErrors(error.response.data);
             }
+            setIsLoading(false);
         }
-
-        fetchTodos();
     };
 
     const editTodo = async (todo: ITodo) => {
         setEditing(todo);
         todoTitleEl.current.value = todo.title;
         todoBodyEl.current.value = todo.body;
-        todoDueDateEl.current.value = todo.due_date;
+        todoDueDateEl.current.value = todo.due_date ? todo.due_date.format("YYYY-MM-DD") : null;
         todoTitleEl.current.focus();
     };
 
@@ -92,11 +124,12 @@ const TodoApp: FunctionComponent<IProps> = ({ todos: initialTodos = [], csrfToke
 
     const onSaveTodo = async (event: FormEvent) => {
         event.preventDefault();
+        setFormErrors(null);
 
         const todo: ITodo = {
             body: todoBodyEl.current.value,
             completed_on: null,
-            due_date: todoDueDateEl.current.value,
+            due_date: todoDueDateEl.current.value ? dayjs(new Date(todoDueDateEl.current.value).getTime()) : null,
             id: editing ? editing.id : null,
             title: todoTitleEl.current.value,
         };
@@ -140,14 +173,14 @@ const TodoApp: FunctionComponent<IProps> = ({ todos: initialTodos = [], csrfToke
             </div>
             <div className={formGroupClass("due_date")}>
                 <label htmlFor="todoDueDate" className="control-label">Due Date</label>
-                <input type="text" className="form-control" id="todoDueDate" name="dueDate" ref={todoDueDateEl} />
+                <input type="date" className="form-control" id="todoDueDate" name="dueDate" ref={todoDueDateEl} />
                 {formErrorHelp("due_date")}
             </div>
             <button className="btn btn-primary" type="submit">Save</button>
         </form>
     );
 
-    const todoListItems = todos.map((todo: ITodo, index: number) => (
+    const todoListItems = sortTodos(todos, sort).map((todo: ITodo, index: number) => (
         <TodoListItem
             key={index}
             todo={todo}
@@ -157,7 +190,20 @@ const TodoApp: FunctionComponent<IProps> = ({ todos: initialTodos = [], csrfToke
         />
     ));
 
-    const appState = formErrors ? "Something went wrong" : (isLoading ? "Loading..." : "&nbsp;");
+    const onSetSort = (direction: Sort) => (event: MouseEvent) => {
+        event.preventDefault();
+        setSort(direction);
+    };
+    const sortToggle = (direction: Sort) => {
+        const label = direction === Sort.Ascending ? "ascending" : "descending";
+
+        if (sort === direction) {
+            return <strong>{label}</strong>;
+        }
+        return <a href={"#" + label} onClick={onSetSort(direction)}>{label}</a>;
+    };
+
+    const appState = isLoading ? "Loading..." : "&nbsp;";
     return (
         <>
             <div className="panel panel-default">
@@ -171,6 +217,12 @@ const TodoApp: FunctionComponent<IProps> = ({ todos: initialTodos = [], csrfToke
                 </div>
 
                 <ul className="list-group">
+                    <li className="list-group-item list-group-item-primary text-center">
+                        <span>Sort: Due Date</span>{" "}
+                        {sortToggle(Sort.Ascending)}
+                        {" / "}
+                        {sortToggle(Sort.Descending)}
+                    </li>
                     {todoListItems}
                 </ul>
             </div>
