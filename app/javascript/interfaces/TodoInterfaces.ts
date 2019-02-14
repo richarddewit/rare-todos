@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 
-export default interface ITodo {
+export interface ITodo {
     id: number;
     title: string;
     due_date: dayjs.Dayjs;

@@ -1,7 +1,7 @@
 // Use Axios as AJAX client
-import axios from "axios";
+import axios, { AxiosStatic } from "axios";
 
-const initializeAxios = (csrfToken: string) => {
+const initializeAxios = (csrfToken: string): AxiosStatic => {
     axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 
     // Insert CSRF token into Axios

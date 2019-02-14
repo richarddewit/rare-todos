@@ -1,9 +1,10 @@
 import dayjs from "dayjs";
 import React, { FormEvent, FunctionComponent } from "react";
 
-import ITodo from "../interfaces/Todo";
+import { ITodo } from "../interfaces/TodoInterfaces";
 
 type TodoCallback = (todo: ITodo) => void;
+
 interface IProps {
     todo: ITodo;
     toggleDone: TodoCallback;
@@ -13,15 +14,19 @@ interface IProps {
 
 const TodoListItem: FunctionComponent<IProps> = ({ todo, toggleDone, editTodo, deleteTodo }) => {
     const isDone = todo.completed_on !== null;
-    const classNames = ["list-group-item"];
+    const classNames = [
+        "todo-list-item",
+        "list-group-item",
+    ];
     if (isDone) {
+        classNames.push("done");
         classNames.push("list-group-item-success");
     }
     const dueDate = todo.due_date ? dayjs(todo.due_date) : null;
     const overdue = dueDate && dueDate.isBefore(dayjs(), "day") && !isDone;
     const dateLabel = dueDate ? (
         <span
-            className={"label label-" + (isDone ? "success" : (overdue ? "danger" : "default"))}
+            className={"todo-due-date label label-" + (isDone ? "success" : (overdue ? "danger" : "default"))}
             title={overdue ? "Overdue" : ""}
         >
             {dueDate.format("DD-MM-YYYY")}
@@ -37,7 +42,11 @@ const TodoListItem: FunctionComponent<IProps> = ({ todo, toggleDone, editTodo, d
     const onDeleteTodo = onFormSubmit(deleteTodo);
 
     const toggleDoneForm = (
-        <form onSubmit={onToggleDone} style={{ display: "inline-block", marginRight: ".3em" }}>
+        <form
+            className="toggle-done-form"
+            onSubmit={onToggleDone}
+            style={{ display: "inline-block", marginRight: ".3em" }}
+        >
             <button
                 className={"btn btn-xs btn-" + (isDone ? "success" : "primary")}
                 type="submit"
@@ -47,7 +56,7 @@ const TodoListItem: FunctionComponent<IProps> = ({ todo, toggleDone, editTodo, d
         </form>
     );
     const editForm = isDone ? null : (
-        <form onSubmit={onEditTodo} style={{ display: "inline-block", marginRight: ".3em" }}>
+        <form className="edit-form" onSubmit={onEditTodo} style={{ display: "inline-block", marginRight: ".3em" }}>
             <button
                 className="btn btn-xs btn-warning"
                 type="submit"
@@ -57,7 +66,7 @@ const TodoListItem: FunctionComponent<IProps> = ({ todo, toggleDone, editTodo, d
         </form>
     );
     const deleteForm = (
-        <form onSubmit={onDeleteTodo} style={{ display: "inline-block" }}>
+        <form className="delete-form" onSubmit={onDeleteTodo} style={{ display: "inline-block" }}>
             <button
                 className="btn btn-xs btn-danger"
                 type="submit"
@@ -75,11 +84,11 @@ const TodoListItem: FunctionComponent<IProps> = ({ todo, toggleDone, editTodo, d
                 </div>
 
                 <div className="col-xs-6">
-                    <h4 className="list-group-item-heading">
+                    <h4 className="todo-title list-group-item-heading">
                         {todo.title}
                     </h4>
 
-                    {todo.body && <p className="list-group-item-text">{todo.body}</p>}
+                    {todo.body && <p className="todo-body list-group-item-text">{todo.body}</p>}
                 </div>
 
                 <div className="col-xs-3 text-right">
