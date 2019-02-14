@@ -4,6 +4,7 @@ import React, { FormEvent, FunctionComponent } from "react";
 import { ITodo } from "../interfaces/TodoInterfaces";
 
 type TodoCallback = (todo: ITodo) => void;
+type FormCallback = (event: FormEvent) => void;
 
 interface IProps {
     todo: ITodo;
@@ -11,6 +12,43 @@ interface IProps {
     editTodo: TodoCallback;
     deleteTodo: TodoCallback;
 }
+
+const ToggleDoneForm: FunctionComponent<{ onToggleDone: FormCallback, isDone: boolean }> = ({ onToggleDone, isDone }) => (
+    <form
+        className="toggle-done-form"
+        onSubmit={onToggleDone}
+        style={{ display: "inline-block", marginRight: ".3em" }}
+    >
+        <button
+            className={"btn btn-xs btn-" + (isDone ? "success" : "primary")}
+            type="submit"
+        >
+            <i className={"glyphicon glyphicon-" + (isDone ? "check" : "unchecked")} />
+        </button>
+    </form>
+);
+
+const EditForm: FunctionComponent<{ onEditTodo: FormCallback }> = ({ onEditTodo }) => (
+    <form className="edit-form" onSubmit={onEditTodo} style={{ display: "inline-block", marginRight: ".3em" }}>
+        <button
+            className="btn btn-xs btn-warning"
+            type="submit"
+        >
+            <i className="glyphicon glyphicon-pencil" />
+        </button>
+    </form>
+);
+
+const DeleteForm: FunctionComponent<{ onDeleteTodo: FormCallback }> = ({ onDeleteTodo }) => (
+    <form className="delete-form" onSubmit={onDeleteTodo} style={{ display: "inline-block" }}>
+        <button
+            className="btn btn-xs btn-danger"
+            type="submit"
+        >
+            <i className="glyphicon glyphicon-trash" />
+        </button>
+    </form>
+);
 
 const TodoListItem: FunctionComponent<IProps> = ({ todo, toggleDone, editTodo, deleteTodo }) => {
     const isDone = todo.completed_on !== null;
@@ -41,46 +79,11 @@ const TodoListItem: FunctionComponent<IProps> = ({ todo, toggleDone, editTodo, d
     const onEditTodo = onFormSubmit(editTodo);
     const onDeleteTodo = onFormSubmit(deleteTodo);
 
-    const toggleDoneForm = (
-        <form
-            className="toggle-done-form"
-            onSubmit={onToggleDone}
-            style={{ display: "inline-block", marginRight: ".3em" }}
-        >
-            <button
-                className={"btn btn-xs btn-" + (isDone ? "success" : "primary")}
-                type="submit"
-            >
-                <i className={"glyphicon glyphicon-" + (isDone ? "check" : "unchecked")} />
-            </button>
-        </form>
-    );
-    const editForm = isDone ? null : (
-        <form className="edit-form" onSubmit={onEditTodo} style={{ display: "inline-block", marginRight: ".3em" }}>
-            <button
-                className="btn btn-xs btn-warning"
-                type="submit"
-            >
-                <i className="glyphicon glyphicon-pencil" />
-            </button>
-        </form>
-    );
-    const deleteForm = (
-        <form className="delete-form" onSubmit={onDeleteTodo} style={{ display: "inline-block" }}>
-            <button
-                className="btn btn-xs btn-danger"
-                type="submit"
-            >
-                <i className="glyphicon glyphicon-trash" />
-            </button>
-        </form>
-    );
-
     return (
         <li className={classNames.join(" ")}>
             <div className="row">
                 <div className="col-xs-1">
-                    {toggleDoneForm}
+                    <ToggleDoneForm onToggleDone={onToggleDone} isDone={isDone} />
                 </div>
 
                 <div className="col-xs-6">
@@ -96,8 +99,8 @@ const TodoListItem: FunctionComponent<IProps> = ({ todo, toggleDone, editTodo, d
                 </div>
 
                 <div className="col-xs-2 text-right">
-                    {editForm}
-                    {deleteForm}
+                    {isDone || <EditForm onEditTodo={onEditTodo} />}
+                    <DeleteForm onDeleteTodo={onDeleteTodo} />
                 </div>
             </div>
         </li>
