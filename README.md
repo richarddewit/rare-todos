@@ -28,6 +28,10 @@ A todo should contain:
 git clone https://github.com/richarddewit/rare-todos.git
 cd rare-todos
 bundle install --without production
+nvm use
+yarn install
+rails db:migrate
+rails db:fixtures:load
 rails s
 ```
 
