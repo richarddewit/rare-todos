@@ -31,6 +31,7 @@ const useTodoApi = (axios: AxiosStatic, initialTodos: ITodo[]) => {
     const todoDueDateEl = useRef(null);
 
     const resetForm = () => {
+        setEditing(false);
         todoTitleEl.current.value = "";
         todoBodyEl.current.value = "";
         todoDueDateEl.current.value = "";
@@ -130,6 +131,7 @@ const useTodoApi = (axios: AxiosStatic, initialTodos: ITodo[]) => {
         editTodo,
         onSaveTodo,
         onSetSort,
+        resetForm,
         toggleDone,
     };
 };

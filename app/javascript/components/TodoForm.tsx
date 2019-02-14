@@ -1,5 +1,6 @@
 import React, {
     FunctionComponent,
+    MouseEvent,
     useContext,
 } from "react";
 
@@ -7,8 +8,10 @@ import { TodoFormContext } from "../contexts/TodoContexts";
 
 const TodoForm: FunctionComponent = () => {
     const {
+        editing,
         formErrors,
         onSaveTodo,
+        resetForm,
         todoTitleEl,
         todoBodyEl,
         todoDueDateEl,
@@ -34,6 +37,11 @@ const TodoForm: FunctionComponent = () => {
         return classNames.join(" ");
     };
 
+    const onCancelClick = (event: MouseEvent) => {
+        event.preventDefault();
+        resetForm();
+    };
+
     return (
         <form id="todo-form" onSubmit={onSaveTodo}>
             <div className={formGroupClass("title")}>
@@ -51,7 +59,10 @@ const TodoForm: FunctionComponent = () => {
                 <input type="date" className="form-control" id="todoDueDate" name="dueDate" ref={todoDueDateEl} />
                 {formErrorHelp("due_date")}
             </div>
+
             <button className="btn btn-primary" type="submit">Save</button>
+            {" "}
+            {editing && <button className="btn btn-default" type="reset" onClick={onCancelClick}>Cancel</button>}
         </form>
     );
 };

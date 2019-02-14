@@ -50,7 +50,7 @@ const TodoApp: FunctionComponent<IProps> = ({ todos: initialTodos = [], csrfToke
         sort,
         todos,
         isLoading,
-        /* editing, */
+        editing,
         formErrors,
 
         todoTitleEl,
@@ -58,6 +58,7 @@ const TodoApp: FunctionComponent<IProps> = ({ todos: initialTodos = [], csrfToke
         todoDueDateEl,
 
         toggleDone,
+        resetForm,
         editTodo,
         deleteTodo,
         onSaveTodo,
@@ -65,8 +66,10 @@ const TodoApp: FunctionComponent<IProps> = ({ todos: initialTodos = [], csrfToke
     } = useTodoApi(axios, initialTodos);
 
     const formContext = {
+        editing,
         formErrors,
         onSaveTodo,
+        resetForm,
         todoBodyEl,
         todoDueDateEl,
         todoTitleEl,
