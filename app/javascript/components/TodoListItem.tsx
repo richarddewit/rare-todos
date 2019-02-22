@@ -28,11 +28,12 @@ const ToggleDoneForm: FunctionComponent<{ onToggleDone: FormCallback, isDone: bo
     </form>
 );
 
-const EditForm: FunctionComponent<{ onEditTodo: FormCallback }> = ({ onEditTodo }) => (
+const EditForm: FunctionComponent<{ onEditTodo: FormCallback, isDone: boolean }> = ({ onEditTodo, isDone }) => (
     <form className="edit-form" onSubmit={onEditTodo} style={{ display: "inline-block", marginRight: ".3em" }}>
         <button
             className="btn btn-xs btn-warning"
             type="submit"
+            disabled={isDone}
         >
             <i className="glyphicon glyphicon-pencil" />
         </button>
@@ -99,7 +100,7 @@ const TodoListItem: FunctionComponent<IProps> = ({ todo, toggleDone, editTodo, d
                 </div>
 
                 <div className="col-xs-2 text-right">
-                    {isDone || <EditForm onEditTodo={onEditTodo} />}
+                    <EditForm onEditTodo={onEditTodo} isDone={isDone} />
                     <DeleteForm onDeleteTodo={onDeleteTodo} />
                 </div>
             </div>
