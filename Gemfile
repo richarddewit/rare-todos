@@ -35,7 +35,7 @@ gem "jbuilder", "~> 2.5"
 gem "bootsnap", ">= 1.1.0", require: false
 
 # Bootstrap 3
-gem "bootstrap-sass", "~> 3.4.0"
+gem "bootstrap-sass", "~> 3.4.1"
 gem "sassc-rails", ">= 2.0.0r"
 
 # React
