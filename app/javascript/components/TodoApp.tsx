@@ -79,9 +79,9 @@ const TodoApp: FunctionComponent<IProps> = ({ todos: initialTodos = [], csrfToke
         sort,
     };
 
-    const todoListItems = sortTodos(todos, sort).map((todo: ITodo, index: number) => (
+    const todoListItems = sortTodos(todos, sort).map((todo: ITodo) => (
         <TodoListItem
-            key={index}
+            key={todo.id}
             todo={todo}
             toggleDone={toggleDone}
             editTodo={editTodo}
