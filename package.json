@@ -6,7 +6,10 @@
     "lint-fix": "tslint --project . --fix"
   },
   "dependencies": {
-    "@rails/webpacker": "3.5",
+    "@babel/plugin-syntax-dynamic-import": "^7.7.4",
+    "@babel/plugin-transform-object-assign": "^7.7.4",
+    "@babel/preset-react": "^7.7.4",
+    "@rails/webpacker": "^4.2.2",
     "@types/react": "^16.8.2",
     "@types/react-dom": "^16.8.0",
     "axios": "^0.18.1",
@@ -16,12 +19,12 @@
     "react": "^16.8.1",
     "react-dom": "^16.8.1",
     "react_ujs": "^2.4.4",
-    "ts-loader": "3.5.0",
+    "ts-loader": "^4.5.0",
     "tslint": "^5.12.1",
     "tslint-react": "^3.6.0",
     "typescript": "^3.3.3"
   },
   "devDependencies": {
-    "webpack-dev-server": "2.11.2"
+    "webpack-dev-server": "^3.10.1"
   }
 }
