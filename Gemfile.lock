@@ -129,7 +129,7 @@ GEM
       pry (~> 0.11)
       yard (~> 0.9.11)
     public_suffix (3.0.3)
-    puma (3.12.0)
+    puma (3.12.2)
     rack (2.0.8)
     rack-proxy (0.6.5)
       rack
@@ -269,7 +269,7 @@ DEPENDENCIES
   pg
   pry
   pry-doc
-  puma (~> 3.11)
+  puma (~> 3.12)
   rails (~> 5.2.2)
   react-rails (~> 2.4.7)
   rubocop
