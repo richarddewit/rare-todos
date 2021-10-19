@@ -18,6 +18,6 @@ module RaReTodos
     # -- all .rb files in that directory are automatically loaded after loading
     # the framework and any gems in your application.
 
-    JsRoutes.generate!("app/javascript/utils/routes.js", namespace: "Routes", include: /todos?/)
+    JsRoutes.generate!("utils/routes.js", include: /todos?/)
   end
 end
