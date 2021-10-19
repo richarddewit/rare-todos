@@ -53,6 +53,8 @@ group :development, :test do
 
   # Rubocop
   gem "rubocop"
+  gem "rubocop-performance"
+  gem "rubocop-rails"
 end
 
 group :development do

@@ -1,5 +1,5 @@
 AllCops:
-  TargetRubyVersion: 2.5
+  TargetRubyVersion: 2.7
   # RuboCop has a bunch of cops enabled by default. This setting tells RuboCop
   # to ignore them, so only the ones explicitly set in this file are enabled.
   DisabledByDefault: true
@@ -10,32 +10,9 @@ AllCops:
     - 'bin/**/*'
     - 'db/schema.rb'
 
-Performance:
-  Exclude:
-    - '**/test/**/*'
-
-Rails:
-  Enabled: true
-
-# Prefer assert_not over assert !
-Rails/AssertNot:
-  Include:
-    - '**/test/**/*'
-
-# Prefer assert_not_x over refute_x
-Rails/RefuteMethods:
-  Include:
-    - '**/test/**/*'
-
 # Prefer &&/|| over and/or.
 Style/AndOr:
   Enabled: true
-
-# Do not use braces for hash literals when they are the last argument of a
-# method call.
-Style/BracesAroundHashParameters:
-  Enabled: true
-  EnforcedStyle: context_dependent
 
 # Align `when` with `case`.
 Layout/CaseIndentation:
@@ -84,7 +61,7 @@ Style/HashSyntax:
 # extra level of indentation.
 Layout/IndentationConsistency:
   Enabled: true
-  EnforcedStyle: rails
+  EnforcedStyle: indented_internal_methods
 
 # Two spaces, no tabs (for indentation).
 Layout/IndentationWidth:
@@ -162,11 +139,12 @@ Style/StringLiterals:
   EnforcedStyle: double_quotes
 
 # Detect hard tabs, no hard tabs.
-Layout/Tab:
+Layout/IndentationStyle:
   Enabled: true
+  EnforcedStyle: spaces
 
 # Blank lines should not have any spaces.
-Layout/TrailingBlankLines:
+Layout/TrailingEmptyLines:
   Enabled: true
 
 # No trailing whitespace.
@@ -174,7 +152,7 @@ Layout/TrailingWhitespace:
   Enabled: true
 
 # Use quotes for string literals when they are enough.
-Style/UnneededPercentQ:
+Style/RedundantPercentQ:
   Enabled: true
 
 Lint/ErbNewArguments:
@@ -187,7 +165,7 @@ Lint/RequireParentheses:
 Lint/ShadowingOuterLocalVariable:
   Enabled: true
 
-Lint/StringConversionInInterpolation:
+Lint/RedundantStringCoercion:
   Enabled: true
 
 Lint/UriEscapeUnescape:
@@ -218,22 +196,4 @@ Style/ColonMethodCall:
   Enabled: true
 
 Style/TrivialAccessors:
-  Enabled: true
-
-Performance/FlatMap:
-  Enabled: true
-
-Performance/RedundantMerge:
-  Enabled: true
-
-Performance/StartWith:
-  Enabled: true
-
-Performance/EndWith:
-  Enabled: true
-
-Performance/RegexpMatch:
-  Enabled: true
-
-Performance/UnfreezeString:
   Enabled: true
