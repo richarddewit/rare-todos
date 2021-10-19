@@ -2,8 +2,8 @@
 
 This is an example app to showcase the following techniques:
 
-- [x] Ruby (`v2.5.3`) on Rails (`v5.2.2`) as CRUD-backend
-- [x] React with hooks (`v16.8`) as frontend
+- [x] Ruby (`v2.7.4`) on Rails (`v5.2.6`) as CRUD-backend
+- [x] React with hooks (`v16.14`) as frontend
 - [x] TypeScript
 - [x] Bootstrap 3 (`v3.4.0`)
 - [x] Rails tests for CRUD API
